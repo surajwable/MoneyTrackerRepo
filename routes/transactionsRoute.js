@@ -1,26 +1,44 @@
-const express = require('express')
-const Transaction = require('../models/Transaction');
-const { get } = require('mongoose');
-const router = express.Router()
+const express = require("express");
+const Transaction = require("../models/Transaction");
+const { get } = require("mongoose");
+const router = express.Router();
+const moment = require("moment");
 
-router.post("/add-transaction",async function(req,res){
-    try{
-        const newtransaction = new Transaction(req.body);
-        await newtransaction.save();
-        res.send("Transaction added successfully");
-    }catch(error){
-     res.status(500).json(error);
-    }
- });
+router.post("/add-transaction", async function (req, res) {
+  try {
+    const newtransaction = new Transaction(req.body);
+    await newtransaction.save();
+    res.send("Transaction added successfully");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
 
- router.get('/get-all-transactions', async(req, res) => {
-    try{
-        const transactions = await Transaction.find({})
-        res.send(transactions)
-    }catch(error){
-        res.status(500).json(error);
-    }
-  });
-  
+router.post("/get-all-transactions", async (req, res) => {
+  const { frequency, selectedRange,type } = req.body;
+  try {
+    const transactions = await Transaction.find({
+      ...(frequency !== "custom"
+        ? {
+            date: {
+              $gt: moment().subtract(Number(req.body.frequency), "d").toDate(),
+            },
+          }
+        : {
+            date: {
+              $gte: selectedRange[0],
+              $lte: selectedRange[1],
+            },
+          }),
 
- module.exports = router;
+      userId: req.body.userId,
+      ...(type!=='all' && {type})
+    });
+    res.send(transactions);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+});
+
+module.exports = router;

@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 function AddEditTransaction({
   setshowAddEditTransactionModal,
   showAddEditTransactionModal,
+  getTransactions,
 }) {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -18,6 +19,7 @@ function AddEditTransaction({
         ...values,
         userId: user._id,
       });
+      getTransactions();
       message.success("Transaction Successful");
       setshowAddEditTransactionModal(false);
       setLoading(false);
@@ -50,8 +52,13 @@ function AddEditTransaction({
           <Select>
             <Select.Option value="salary">Salary</Select.Option>
             <Select.Option value="freelance">Freelance</Select.Option>
+            <Select.Option value="investment">Investment</Select.Option>
+            <Select.Option value="charity">Charity</Select.Option>
             <Select.Option value="food">Food</Select.Option>
+            <Select.Option value="rent">Rent</Select.Option>
+            <Select.Option value="maintenance">Maintenance</Select.Option>
             <Select.Option value="entertainment">Entertainment</Select.Option>
+            <Select.Option value="travel">Travel</Select.Option>
             <Select.Option value="education">Education</Select.Option>
             <Select.Option value="medical">Medical</Select.Option>
             <Select.Option value="tax">Tax</Select.Option>

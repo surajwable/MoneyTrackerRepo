@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
-import { Button, Form, Input, message } from "antd";
+import { Button, Form, Input, message, } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import lottie from "lottie-web";
 import "../resources/authentication.css";
 import axios from 'axios';
 import Spinner from "../components/Spinner";
-
-
 
 function Login() {
   const [loading,setLoading] = useState(false)
