@@ -2,6 +2,7 @@
     box-shadow: 0 0 3px grey;
     padding:10px 20px;
     border-radius: 15px;
+    overflow-x: scroll;
 }
 
 .transaction-form label{
@@ -10,8 +11,8 @@
 
 .view-switch{
  border: 1px solid rgba(0, 0, 0, 0.722);
+ border-radius: 3px;
  padding: 5px 10px;
- border-radius: 5px;
 }
 
 .anticon svg{

@@ -6,6 +6,8 @@ import { Link, useNavigate } from "react-router-dom";
 function AddEditTransaction({
   setshowAddEditTransactionModal,
   showAddEditTransactionModal,
+  selectedItemForEdit,
+  setSelectedItemForEdit,
   getTransactions,
 }) {
   const [loading, setLoading] = useState(false);
@@ -15,13 +17,29 @@ function AddEditTransaction({
     try {
       const user = JSON.parse(localStorage.getItem("moneytracker-user"));
       setLoading(true);
-      await axios.post("/api/transactions/add-transaction", {
-        ...values,
-        userId: user._id,
-      });
-      getTransactions();
-      message.success("Transaction Successful");
+      
+      if(selectedItemForEdit){
+        await axios.post("/api/transactions/edit-transaction", {
+         payload:{
+          ...values,
+          userId: user._id,
+         },
+          transactionId: selectedItemForEdit._id
+        });
+        getTransactions();
+        message.success("Transaction updated Successfully");
+      }
+      else
+      {
+        await axios.post("/api/transactions/add-transaction", {
+          ...values,
+          userId: user._id,
+        });
+        getTransactions();
+        message.success("Transaction added Successfully");
+      }
       setshowAddEditTransactionModal(false);
+      setSelectedItemForEdit(null);
       setLoading(false);
     } catch (error) {
       message.error("Something went wrong");
@@ -31,12 +49,17 @@ function AddEditTransaction({
 
   return (
     <Modal
-      title="Add transaction"
+      title={selectedItemForEdit ? "Edit Transaction" : "Add Transaction"}
       open={showAddEditTransactionModal}
       onCancel={() => setshowAddEditTransactionModal(false)}
       footer={false}
     >
-      <Form layout="vertical" className="transaction-form" onFinish={onFinish}>
+      <Form
+        layout="vertical"
+        className="transaction-form"
+        onFinish={onFinish}
+        initialValues={selectedItemForEdit}
+      >
         <Form.Item label="Amount" name="amount">
           <Input type="text" />
         </Form.Item>

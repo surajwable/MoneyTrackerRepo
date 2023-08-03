@@ -7,7 +7,12 @@ import Spinner from "../components/Spinner";
 import axios from "axios";
 import moment from "moment";
 import { DatePicker, Space } from "antd";
-import { AreaChartOutlined, UnorderedListOutlined } from "@ant-design/icons";
+import {
+  AreaChartOutlined,
+  DeleteOutlined,
+  UnorderedListOutlined,
+  EditOutlined,
+} from "@ant-design/icons";
 import Analatics from "../components/Analatics";
 const { RangePicker } = DatePicker;
 
@@ -19,11 +24,13 @@ function Home() {
   const [frequency, setFrequency] = useState("7");
   const [type, setType] = useState("all");
   const [selectedRange, setSelectedRange] = useState([]);
-  const [viewType,setViewType] = useState('table');
+  const [viewType, setViewType] = useState("table");
+  const [selectedItemForEdit, setSelectedItemForEdit] = useState(null);
 
   const getTransactions = async () => {
     try {
       const user = JSON.parse(localStorage.getItem("moneytracker-user"));
+
       setLoading(true);
       const response = await axios.post(
         "/api/transactions/get-all-transactions",
@@ -37,6 +44,24 @@ function Home() {
 
       console.log(response.data);
       setTransactionsData(response.data);
+      console.log("data from transactionData  " + transactionsData);
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      message.error("something went wrong");
+    }
+  };
+
+  //delete transactions
+  const deleteTransactions = async (record) => {
+    try {
+      setLoading(true);
+      await axios.post("/api/transactions/delete-transaction", {
+        transactionId: record._id,
+      });
+      message.success("transaction deleted successfully");
+      getTransactions();
+
       console.log("data from transactionData  " + transactionsData);
       setLoading(false);
     } catch (error) {
@@ -76,6 +101,23 @@ function Home() {
       dataIndex: "type",
       key: "type",
     },
+    {
+      title: "Actions",
+      dataIndex: "actions",
+      render: (text, record) => {
+        return (
+          <div>
+            <EditOutlined
+              onClick={() => {
+                setSelectedItemForEdit(record);
+                setshowAddEditTransactionModal(true);
+              }}
+            />
+            <DeleteOutlined className="mx-3"  onClick={()=>deleteTransactions(record)}/>
+          </div>
+        );
+      },
+    },
   ];
 
   return (
@@ -85,7 +127,11 @@ function Home() {
         <div className="d-flex">
           <div className="d-flex flex-column">
             <h6>Select Frequency</h6>
-            <Select className="mr-3" value={frequency} onChange={(value) => setFrequency(value)}>
+            <Select
+              className="mr-3"
+              value={frequency}
+              onChange={(value) => setFrequency(value)}
+            >
               <Select.Option value="7">Last 1 Week</Select.Option>
               <Select.Option value="30">Last 1 Month</Select.Option>
               <Select.Option value="365">Last 1 Year</Select.Option>
@@ -120,16 +166,15 @@ function Home() {
                   viewType === "table" ? "active-icon" : "inactive-icon"
                 }`}
                 size={30}
-                onClick={()=>setViewType('table')}
+                onClick={() => setViewType("table")}
               />
-              <AreaChartOutlined 
-              className={`${
-                viewType === "analytics" ? "active-icon" : "inactive-icon"
-              }`}
-              size={30}
-              onClick={()=>setViewType('analytics')}
+              <AreaChartOutlined
+                className={`${
+                  viewType === "analytics" ? "active-icon" : "inactive-icon"
+                }`}
+                size={30}
+                onClick={() => setViewType("analytics")}
               />
-
             </div>
           </div>
           <button
@@ -142,16 +187,22 @@ function Home() {
       </div>
 
       <div className="table-analtics">
-          {viewType==='table' ? <div className="table">
-          <Table columns={columns} dataSource={transactionsData} />
-        </div> : <Analatics transactions={transactionsData}/>}        
+        {viewType === "table" ? (
+          <div className="table">
+            <Table columns={columns} dataSource={transactionsData} />
+          </div>
+        ) : (
+          <Analatics transactions={transactionsData} />
+        )}
       </div>
 
       {showAddEditTransactionModal && (
         <AddEditTransaction
           showAddEditTransactionModal={showAddEditTransactionModal}
           setshowAddEditTransactionModal={setshowAddEditTransactionModal}
+          selectedItemForEdit={selectedItemForEdit}
           getTransactions={getTransactions}
+          setSelectedItemForEdit={setSelectedItemForEdit}
         />
       )}
     </DefaultLayout>

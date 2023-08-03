@@ -15,6 +15,9 @@
 }
 
 .category-card{
-    padding: 10px;
+    padding: 5px 20px;
     box-shadow: 0 0 2px grey;
+    margin-top: 10;
+    border-radius: 10px;
+
 }

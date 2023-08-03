@@ -14,6 +14,28 @@ router.post("/add-transaction", async function (req, res) {
   }
 });
 
+router.post("/edit-transaction", async function (req, res) {
+  try {
+    await Transaction.findOneAndUpdate({_id:req.body.transactionId}, req.body.payload)
+    const newtransaction = new Transaction(req.body);
+    await newtransaction.save();
+    res.send("Transaction updated successfully");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
+router.post("/delete-transaction", async function (req, res) {
+  try {
+    await Transaction.findOneAndDelete({_id:req.body.transactionId})
+    const newtransaction = new Transaction(req.body);
+    await newtransaction.save();
+    res.send("Transaction deleted successfully");
+  } catch (error) {
+    res.status(500).json(error);
+  }
+});
+
 router.post("/get-all-transactions", async (req, res) => {
   const { frequency, selectedRange,type } = req.body;
   try {
