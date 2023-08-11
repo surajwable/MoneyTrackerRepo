@@ -6,10 +6,8 @@ import {BrowserRouter,Navigate,Route, Routes} from 'react-router-dom';
 
 
 import Home from './pages/Home';
-import Test from "./pages/Test";
 import Login from './pages/Login';
 import Register from './pages/Register';
-import Login1 from './pages/Login';
 
 function App() {
   return (
@@ -17,7 +15,6 @@ function App() {
       <BrowserRouter>
           <Routes>
             <Route path="/" element={<ProtectedRoute><Home/></ProtectedRoute>}/>
-            <Route path="/test" element={<ProtectedRoute><Test/></ProtectedRoute>}/>
             <Route path="/login" element={<Login/>}></Route>
             <Route path="/register" element={<Register/>}></Route>
           </Routes>

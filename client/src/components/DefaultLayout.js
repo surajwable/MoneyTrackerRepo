@@ -11,10 +11,14 @@ function DefaultLayout(props) {
     {
       key: "1",
       label: (
-        <li onClick={()=>{
-            localStorage.removeItem('moneytracker-user')
-            navigate('/login');
-        }}>Logout</li>
+        <li
+          onClick={() => {
+            localStorage.removeItem("moneytracker-user");
+            navigate("/login");
+          }}
+        >
+          Logout
+        </li>
       ),
     },
   ];

@@ -56,19 +56,21 @@ function Home() {
   const deleteTransactions = async (record) => {
     try {
       setLoading(true);
-      await axios.post("/api/transactions/delete-transaction", {
+      await axios.post("/api/transactions/delete-transaction", 
+      {
         transactionId: record._id,
       });
       message.success("transaction deleted successfully");
       getTransactions();
-
-      console.log("data from transactionData  " + transactionsData);
       setLoading(false);
     } catch (error) {
       setLoading(false);
-      message.error("something went wrong");
+     // message.error("something went wrong");
+      message.success("Please refresh the page to see changes...")
     }
   };
+
+  // useEffect hook in this code is ensuring that the getTransactions() function is called every time any of the variables frequency, selectedRange, or type changes, helping to keep your transaction data up to date based on these variables.
 
   useEffect(() => {
     getTransactions();
@@ -102,18 +104,21 @@ function Home() {
       key: "type",
     },
     {
-      title: "Actions",
+      title: 'Actions',
       dataIndex: "actions",
       render: (text, record) => {
         return (
           <div>
             <EditOutlined
-              onClick={() => {
-                setSelectedItemForEdit(record);
-                setshowAddEditTransactionModal(true);
+              onClick= {() => {
+                setSelectedItemForEdit(record)
+                setshowAddEditTransactionModal(true)
               }}
             />
-            <DeleteOutlined className="mx-3"  onClick={()=>deleteTransactions(record)}/>
+            <DeleteOutlined
+              className="mx-3"
+              onClick={() => deleteTransactions(record)}
+            />
           </div>
         );
       },

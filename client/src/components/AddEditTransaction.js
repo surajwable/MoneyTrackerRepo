@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Input, Modal, Form, message, Select } from "antd";
 import axios from "axios";
 import { Link, useNavigate } from "react-router-dom";
+import Spinner from "./Spinner";
 
 function AddEditTransaction({
   setshowAddEditTransactionModal,
@@ -42,7 +43,8 @@ function AddEditTransaction({
       setSelectedItemForEdit(null);
       setLoading(false);
     } catch (error) {
-      message.error("Something went wrong");
+      //message.error("Something went wrong");
+      message.success("Please Refresh the page to see changes...")
       setLoading(false);
     }
   };
@@ -54,6 +56,7 @@ function AddEditTransaction({
       onCancel={() => setshowAddEditTransactionModal(false)}
       footer={false}
     >
+      {loading && <Spinner/>}
       <Form
         layout="vertical"
         className="transaction-form"

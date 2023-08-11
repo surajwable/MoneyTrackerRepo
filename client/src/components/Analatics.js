@@ -51,22 +51,6 @@ function Analatics({ transactions }) {
     "tax",
   ];
 
-//   const expenseData = {
-//     labels: categories,
-//     datasets: [
-//       {
-//         label: "Expense",
-//         data: categories.map((category) =>
-//           transactions
-//             .filter((t) => t.type === "expense" && t.category === category)
-//             .reduce((acc, t) => acc + t.amount, 0)
-//         ),
-//         backgroundColor: "rgba(255, 99, 132, 0.6)",
-//       },
-//     ],
-//   };
-  
-
   return (
     <div className="analytics">
       <div className="row">
@@ -165,24 +149,6 @@ function Analatics({ transactions }) {
         </div>
       </div>
 
-         {/* Add the Bar chart
-      <div className="row">
-        <div className="col-md-6">
-          <div className="bar-chart">
-            <h3>Expense Category-Wise Bar Chart</h3>
-            <Bar
-              data={expenseData}
-              options={{
-                scales: {
-                  y: {
-                    beginAtZero: true,
-                  },
-                },
-              }}
-            />
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 }
